@@ -1,1 +1,1 @@
-# -ansible-server-voidlinux
+# ansible-server-voidlinux
