@@ -1,0 +1,12 @@
+---
+- hosts: local-machine
+  become: yes
+
+  vars_files:
+    - defaults/main.yml
+
+  roles:
+    - add-user
+    - install-packages
+    - configure
+    - docker
