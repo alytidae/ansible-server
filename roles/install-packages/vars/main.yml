@@ -1,0 +1,13 @@
+---
+free_packages:
+  - htop
+  - curl
+  - git
+  - tree
+  - neofetch
+  - helix 
+  - wget
+  - lazygit 
+  - podman
+  - mergerfs
+  - snapraid
