@@ -1,0 +1,18 @@
+---
+
+- name: Add new user "{{ username }}"
+  user:
+    name: "{{ username }}"
+    password: "{{ password | password_hash('sha512')}}"
+    update_password: on_create
+    groups: wheel
+    append: yes
+    create_home: true
+
+- name: Allow 'wheel' group to have password sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
+    line: '%wheel ALL=(ALL:ALL) ALL'
+    validate: 'visudo -cf %s' 
