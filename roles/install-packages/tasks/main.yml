@@ -1,0 +1,12 @@
+---
+- name: Upgrade all packages
+  package:
+    update_cache: true
+    upgrade: true
+
+- name: Install free-packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ free_packages }}"
+
