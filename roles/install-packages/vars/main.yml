@@ -11,3 +11,5 @@ free_packages:
   - podman
   - mergerfs
   - snapraid
+  - ufw
+  - lazydocker
