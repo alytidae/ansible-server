@@ -9,4 +9,5 @@
   loop:
     - "/home/{{ username }}/containers/jellyfin/config"        
     - "/home/{{ username }}/containers/jellyfin/cache" 
+    - "/home/{{ username }}/containers/jellyfin/media" 
     - "/home/{{ username }}/containers/immich"       
