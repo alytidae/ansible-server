@@ -1,0 +1,12 @@
+---
+- name: Creating the directories to containers in /home
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+  loop:
+    - "/home/{{ username }}/containers/jellyfin/config"        
+    - "/home/{{ username }}/containers/jellyfin/cache" 
+    - "/home/{{ username }}/containers/immich"       
