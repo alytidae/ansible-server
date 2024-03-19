@@ -9,6 +9,7 @@ free_packages:
   - wget
   - lazygit 
   - podman
+  - podman-compose
   - mergerfs
   - snapraid
   - ufw
