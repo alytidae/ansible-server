@@ -11,4 +11,4 @@
     - "/home/{{ username }}/containers/jellyfin/cache" 
     - "/home/{{ username }}/containers/jellyfin/media" 
     - "/home/{{ username }}/containers/gitea" 
-    - "/home/{{ username }}/containers/immich"       
+    - "/home/{{ username }}/containers/immich/library"       
