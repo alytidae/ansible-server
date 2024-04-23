@@ -8,8 +8,8 @@ free_packages:
   - helix 
   - wget
   - lazygit 
-  - podman
-  - podman-compose
+  - docker
+  - docker-compose
   - mergerfs
   - snapraid
   - ufw

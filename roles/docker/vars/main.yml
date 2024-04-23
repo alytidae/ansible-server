@@ -1,0 +1,6 @@
+immich_version: "release"
+immich_db_hostname: "immich_postgres"
+immich_db_username: "postgres"
+immich_db_database_name: "immich"
+immich_db_docker_data_location: "./postgres"
+immich_redis_hostname: "immich_redis"
