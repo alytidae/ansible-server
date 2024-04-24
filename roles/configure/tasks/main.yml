@@ -15,9 +15,9 @@
 
 - name: Configure ssh
   shell: echo 'SSH!!!'
-  when: ssh-public-key | length > 0
+  when: ssh_public_key|length > 0
 
 - name: Configure ssh
   shell: echo 'No key!'
-  when: ssh-public-key | length == 0
+  when: ssh_public_key|length == 0
 
