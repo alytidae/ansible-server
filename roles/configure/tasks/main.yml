@@ -15,5 +15,9 @@
 
 - name: Configure ssh
   shell: echo 'SSH!!!'
-  when: test_myscript.stderr | length > 0
+  when: "{{ssh-public-key}}" | length > 0
+
+- name: Configure ssh
+  shell: echo 'No key!'
+  when: "{{ssh-public-key}}" | length == 0
 
