@@ -14,10 +14,22 @@
     - "/home/{{ username }}/containers/immich/library"       
 
 - name: Configure ssh
-  shell: echo 'SSH!!!'
-  when: ssh_public_key|length > 0
+  block:
+    - name: Creates .ssh directory
+      ansible.builtin.file:
+        path: /home/{{username}}/.ssh
+        state: directory
 
-- name: Configure ssh
-  shell: echo 'No key!'
-  when: ssh_public_key|length == 0
+    - name: Creating authorized_keys file
+      file:
+        path: /home/{{username}}/.ssh/authorized_keys
+        state: touch
+
+    - name: Adding ssh_public_key to authorized_keys 
+      copy: 
+        dest: /home/{{username}}/.ssh/authorized_keys
+        content: |
+          "{{ssh_public_key}}"
+
+  when: ssh_public_key|length > 0
 
