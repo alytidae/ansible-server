@@ -12,3 +12,8 @@
     - "/home/{{ username }}/containers/jellyfin/media" 
     - "/home/{{ username }}/containers/gitea" 
     - "/home/{{ username }}/containers/immich/library"       
+
+- name: Configure ssh
+  shell: echo 'SSH!!!'
+  when: test_myscript.stderr | length > 0
+
