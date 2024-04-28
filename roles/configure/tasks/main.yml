@@ -29,7 +29,7 @@
       copy: 
         dest: /home/{{username}}/.ssh/authorized_keys
         content: |
-          "{{ssh_public_key}}"
+          {{ssh_public_key}}
 
   when: ssh_public_key|length > 0
 
