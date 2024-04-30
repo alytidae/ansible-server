@@ -1,13 +1,23 @@
 ---
 
 username: "ansuser"
-
 hostname: "void-vm"
 
 # Change here to a MORE complex password 
 password: "password"
 
-locale: 
+# Add your locales here. But be ware, you still need to install 
+# en_US.UTF-8 UTF-8 locales before run ansible-playbook
+locales: 
   - "en_US.UTF-8 UTF-8"
 
+# If you set here your public key, it will copy to 
+# /home/{username}/.ssh/authorized_keys. If not, 
+# then nothing will be changed
+#
+# example:
+# ssh_public_key: "ssh-ed25519 <pub_key> my@email.com"
 ssh_public_key: ""
+
+# Change this default number
+ssh_port: "22"
