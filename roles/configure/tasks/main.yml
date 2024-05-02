@@ -37,12 +37,15 @@
     dest: "/etc/ssh/sshd_config"
     regexp: "^#Port"
     line: "Port {{ssh_port}}"
-  notify: "Restart sshd"
 
 - name: Disable SSH password auth
   lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: "^#PasswordAuthentication yes"
     line: "PasswordAuthentication no"
-  notify: "Restart sshd"
   when: ssh_password_authentication == "no"
+
+- name: Enable and start SSH
+  notity: "Start sshd"
+  notify: "Enable sshd"
+  

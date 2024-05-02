@@ -4,3 +4,13 @@
   service:
     name: sshd
     state: restarted
+
+- name: Start sshd
+  service:
+    name: sshd
+    state: started
+
+- name: Enable sshd
+  service:
+    name: sshd
+    enabled: yes
