@@ -1,2 +1,2 @@
 [local-machine]
-localhost ansible_connection=local ansible_ssh_user=root
+localhost ansible_connection=local ansible_ssh_user=root ansible_port=22
