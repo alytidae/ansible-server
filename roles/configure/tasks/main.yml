@@ -35,7 +35,13 @@
 - name: Change default port from 22 to {{ssh_port}}
   lineinfile:
     dest: "/etc/ssh/sshd_config"
-    regexp: "^Port"
+    regexp: "^#Port"
     line: "Port {{ssh_port}}"
   notify: "Restart sshd"
 
+- name: Disable SSH password auth
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^#PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
+  notify: "Restart sshd"

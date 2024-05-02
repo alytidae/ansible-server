@@ -18,6 +18,9 @@ locales:
 # example:
 # ssh_public_key: "ssh-ed25519 <pub_key> my@email.com"
 ssh_public_key: ""
+# You can change it, but be careful, check if you copy the
+# public key correctly!!!
+ssh_password_authentication: "yes"
 
 # Change this default number
 ssh_port: "22"
