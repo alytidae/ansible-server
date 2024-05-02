@@ -13,7 +13,7 @@
     - "/home/{{ username }}/containers/gitea" 
     - "/home/{{ username }}/containers/immich/library"       
 
-- name: Configure ssh
+- name: Add ssh public_key
   block:
     - name: Creates .ssh directory
       ansible.builtin.file:
@@ -30,6 +30,12 @@
         dest: /home/{{username}}/.ssh/authorized_keys
         content: |
           {{ssh_public_key}}
-
   when: ssh_public_key|length > 0
+
+- name: Change default port from 22 to {{ssh_port}}
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^Port"
+    line: "Port {{ssh_port}}"
+  notify: "Restart sshd"
 
