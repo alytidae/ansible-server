@@ -122,7 +122,7 @@ services:
       - ${PROMETHEUS_PORT_WEB}:9090
     volumes:
       - prom-data:/prometheus    
-      - prom-configs:/etc/prometheus
+      - ${PROMETHEUS_PATH}:/etc/prometheus
     env_file:
       - docker.env
     restart: no
@@ -170,4 +170,3 @@ volumes:
   grafana-data:
   grafana-config:
   prom-data:    
-  prom-configs:
