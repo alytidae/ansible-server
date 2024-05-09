@@ -54,3 +54,13 @@
   service:
     name: sshd
     state: started
+
+- name: Deny everything and enable UFW
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: "UFW - Allow HTTP on port {{ firewall_allow_ports }}"
+  ufw:
+    rule: allow
+    port: "{{ firewall_allow_ports }}"
