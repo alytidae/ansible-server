@@ -45,7 +45,12 @@
     line: "PasswordAuthentication no"
   when: ssh_password_authentication == "no"
 
-- name: Enable and start SSH
-  notity: "Start sshd"
-  notify: "Enable sshd"
-  
+- name: Enable sshd
+  service:
+    name: sshd
+    enabled: yes
+
+- name: Start sshd
+  service:
+    name: sshd
+    state: started
