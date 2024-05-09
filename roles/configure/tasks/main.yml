@@ -18,8 +18,8 @@
   copy:
     src: /root/ansible/ansible-server-voidlinux/docker/prometheus-config/prometheus.yml
     dest: /home/{{ username }}/containers/prometheus
-    owner: {{ username }}
-    group: {{ username }}
+    owner: "{{ username }}"
+    group: "{{ username }}"
     mode: '0644'
 
 - name: Add ssh public_key
