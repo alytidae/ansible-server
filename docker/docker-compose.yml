@@ -1,0 +1,169 @@
+version: '3'
+
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    volumes:
+      - ${JELLYFIN_PATH}/config:/config
+      - ${JELLYFIN_PATH}/cache:/cache
+      - ${JELLYFIN_PATH}/media:/media
+    ports:
+      - ${JELLYFIN_PORT_WEB}:8096
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  gitea:
+    image: gitea/gitea
+    container_name: gitea
+    volumes:
+      - ${GITEA_PATH}/gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - ${GITEA_PORT_WEB}:3000
+      - ${GITEA_PORT_SSH}:22
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  immich-server:
+    container_name: immich_server
+    image:  ghcr.io/immich-app/immich-server:release
+    command: ['start.sh', 'immich']
+    volumes:
+      # Look, I turned off the upload function.
+      # - /path/to/upload/images:/usr/src/app/upload
+      - ${IMMICH_EXTERNAL_IMAGES_PATH}:/usr/src/app/external:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - ${IMMICH_PORT_WEB}:3001
+    depends_on:
+      - immich-redis
+      - immich-database
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  immich-microservices:
+    container_name: immich_microservices
+    image: ghcr.io/immich-app/immich-server:release
+    command: ['start.sh', 'microservices']
+    volumes:
+      # Look, I turned off the upload function.
+      # - /path/to/upload/images:/usr/src/app/upload
+      - ${IMMICH_EXTERNAL_IMAGES_PATH}:/usr/src/app/external:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - immich-redis
+      - immich-database
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    volumes:
+      - model-cache:/cache
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  immich-redis:
+    container_name: immich_redis
+    image: registry.hub.docker.com/library/redis:6.2-alpine@sha256:51d6c56749a4243096327e3fb964a48ed92254357108449cb6e23999c37773c5
+    restart: unless-stopped
+
+  immich-database:
+    container_name: immich_postgres
+    image: registry.hub.docker.com/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    environment:
+      POSTGRES_PASSWORD: ${IMMICH_POSTGRES_PASSWORD}
+      POSTGRES_USER: ${IMMICH_POSTGRES_USER}
+      POSTGRES_DB: ${IMMICH_POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    ports:
+      - ${GRAFANA_PORT_WEB}:3000
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - ${PROMETHEUS_PORT_WEB}:9090
+    volumes:
+      - ${PROMETHEUS_PATH}:/etc/prometheus    
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    ports:
+      - ${NODE_EXPORTER_PORT}:9100
+    volumes:
+      - '/:/host:ro,rslave'      
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+  wireguard:
+    image: ghcr.io/wg-easy/wg-easy
+    container_name: wireguard
+    volumes:
+      - etc_wireguard:/etc/wireguard
+    ports:
+      - ${WIREGUARD_PORT_UDP}:51820/udp
+      - ${WIREGUARD_PORT_TCP}:51821/tcp
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+    environment:
+      - LANG=${WIREGUARD_LANG}
+      - WG_HOST=${WIREGUARD_HOST}
+      - PASSWORD=${WIREGUARD_PASSWORD}
+    env_file:
+      - docker.env
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  model-cache:
+  grafana-storage:
+  prometheus_data:
+  etc_wireguard:
