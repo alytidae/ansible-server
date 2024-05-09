@@ -1,6 +1,5 @@
 version: '3'
 
-
 services:
   jellyfin:
     image: jellyfin/jellyfin
@@ -47,8 +46,8 @@ services:
     ports:
       - ${IMMICH_PORT_WEB}:3001
     depends_on:
-      - immich-redis
-      - immich-database
+      - redis
+      - database
     env_file:
       - docker.env
     restart: no
@@ -63,8 +62,8 @@ services:
       - ${IMMICH_EXTERNAL_IMAGES_PATH}:/usr/src/app/external:ro
       - /etc/localtime:/etc/localtime:ro
     depends_on:
-      - immich-redis
-      - immich-database
+      - redis
+      - database
     env_file:
       - docker.env
     restart: no
@@ -78,12 +77,12 @@ services:
       - docker.env
     restart: no
 
-  immich-redis:
-    container_name: immich_redis
-    image: registry.hub.docker.com/library/redis:6.2-alpine@sha256:51d6c56749a4243096327e3fb964a48ed92254357108449cb6e23999c37773c5
+  redis:
+    container_name: immich-redis
+    image: registry.hub.docker.com/library/redis:latest
     restart: no
 
-  immich-database:
+  database:
     container_name: immich_postgres
     image: registry.hub.docker.com/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
     environment:
@@ -109,7 +108,9 @@ services:
     ports:
       - ${GRAFANA_PORT_WEB}:3000
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
+      - grafana-config:/etc/grafana
+
     env_file:
       - docker.env
     restart: no
@@ -120,13 +121,14 @@ services:
     ports:
       - ${PROMETHEUS_PORT_WEB}:9090
     volumes:
-      - ${PROMETHEUS_PATH}:/etc/prometheus    
+      - prom-data:/prometheus    
+      - prom-configs:/etc/prometheus
     env_file:
       - docker.env
     restart: no
 
   node_exporter:
-    image: quay.io/prometheus/node-exporter:latest
+    image: prom/node-exporter
     container_name: node_exporter
     command:
       - '--path.rootfs=/host'
@@ -164,6 +166,8 @@ services:
 volumes:
   pgdata:
   model-cache:
-  grafana-storage:
-  prometheus_data:
   etc_wireguard:
+  grafana-data:
+  grafana-config:
+  prom-data:    
+  prom-configs:
