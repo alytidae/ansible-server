@@ -60,7 +60,8 @@
     state: enabled
     policy: deny
 
-- name: "UFW - Allow HTTP on port {{ firewall_allow_ports }}"
+- name: UFW - Allow HTTP on ports in 'firewall_allow_ports'
   ufw:
     rule: allow
-    port: "{{ firewall_allow_ports }}"
+    port: "{{ item }}"
+  with_items: "{{ firewall_allow_ports }}"
