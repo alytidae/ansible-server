@@ -14,13 +14,14 @@
     - "/home/{{ username }}/containers/immich/library"       
     - "/home/{{ username }}/containers/prometheus"
 
-- name: Copy prometheus config file in /containers/prometheus
-  copy:
-    src: /root/ansible/ansible-server-voidlinux/docker/prometheus-config/prometheus.yml
-    dest: /home/{{ username }}/containers/prometheus
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: '0644'
+# CHANGE THIS
+# - name: Copy prometheus config file in /containers/prometheus
+#   copy:
+#     src: /root/ansible/ansible-server-voidlinux/docker/prometheus-config/prometheus.yml
+#     dest: /home/{{ username }}/containers/prometheus
+#     owner: "{{ username }}"
+#     group: "{{ username }}"
+#     mode: '0644'
 
 - name: Add ssh public_key
   block:
