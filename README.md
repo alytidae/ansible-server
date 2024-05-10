@@ -21,13 +21,13 @@ I assume you've just installed your system, and it's bare. This instruction will
 Example:\
 *Void*\
 `xbps-install -Su`\
-`xbps-install -S git python ansible`\
+`xbps-install -S git python ansible`
 
 **0.2** If you haven't installed locales yet, you need to do so, otherwise ansible won't be able to run:
 You need to uncomment #en_US.UTF-8 UTF-8 line:
 *Void*\
 `vim /etc/default/libc-locales`\
-`xbps-reconfigure -fa`\
+`xbps-reconfigure -fa`
 
 *Arch*\
 `vim /etc/locale.gen`\
