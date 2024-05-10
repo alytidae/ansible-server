@@ -54,7 +54,7 @@ This Ansible script won't automatically start these containers; you'll have to d
 *1.2(Optional)* Open the file docker/docker.env, and modify all Docker settings.
 
 ### Starting the Ansible
-In the project folder:\
+**1.3** In the project folder:\
 `ansible-playbook playbook.yml`
 
 Thats it! 
