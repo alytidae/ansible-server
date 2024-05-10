@@ -25,11 +25,11 @@ Example:
 
 **0.2** If you haven't installed locales yet, you need to do so, otherwise ansible won't be able to run:
 You need to uncomment #en_US.UTF-8 UTF-8 line:
-*Void*
-`vim /etc/default/libc-locales`
+*Void*\
+`vim /etc/default/libc-locales`\
 `xbps-reconfigure -fa`
 
-*Arch*
+*Arch*\
 `vim /etc/locale.gen`
 `locale-gen`
 
@@ -41,10 +41,9 @@ In the project, there are two places for configuration:
 
 This Ansible script won't automatically start these containers; you'll have to do it manually after installation. Therefore, *you only need* to configure defaults/main.yml.
 
-Mandatory:
 **1.1** Open the file defaults/main.yml, and modify all settings; there's a comment next to each one so you won't get confused.
 
-Optional:
+Optional:\
 *1.2* Open the file docker/docker.env, and modify all Docker settings.
 
 
