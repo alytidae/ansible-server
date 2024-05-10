@@ -24,7 +24,7 @@ Example:\
 `xbps-install -S git python ansible`
 
 **0.2** If you haven't installed locales yet, you need to do so, otherwise ansible won't be able to run:
-You need to uncomment #en_US.UTF-8 UTF-8 line:
+You need to uncomment #en_US.UTF-8 UTF-8 line:\
 *Void*\
 `vim /etc/default/libc-locales`\
 `xbps-reconfigure -fa`
@@ -43,8 +43,7 @@ This Ansible script won't automatically start these containers; you'll have to d
 
 **1.1** Open the file defaults/main.yml, and modify all settings; there's a comment next to each one so you won't get confused.
 
-Optional:\
-*1.2* Open the file docker/docker.env, and modify all Docker settings.
+*1.2(Optional)* Open the file docker/docker.env, and modify all Docker settings.
 
 
 ## License
