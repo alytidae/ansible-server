@@ -11,6 +11,10 @@ password: "password"
 locales: 
   - "en_US.UTF-8 UTF-8"
 
+samba_username: "smbuser"
+# Change here to a MORE complex password 
+samba_password: "password"
+
 # If you set here your public key, it will copy to 
 # /home/{username}/.ssh/authorized_keys. If not, 
 # then nothing will be changed

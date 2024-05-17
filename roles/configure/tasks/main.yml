@@ -13,6 +13,7 @@
     - "/home/{{ username }}/containers/gitea" 
     - "/home/{{ username }}/containers/immich/library"       
     - "/home/{{ username }}/containers/prometheus"
+    - "/share"
 
 # CHANGE THIS
 # - name: Copy prometheus config file in /containers/prometheus
@@ -75,3 +76,63 @@
     rule: allow
     port: "{{ item }}"
   with_items: "{{ firewall_allow_ports }}"
+
+- name: Create samba group
+  group:
+    name: smbgroup
+    system: true
+
+- name: Create samba user
+  user:
+    name: "{{ samba_username }}"
+    password: "{{ samba_password | password_hash('sha512')}}"
+    update_password: on_create
+    groups: smbgroup
+    append: true
+    create_home: false
+    system: true
+    shell: /usr/bin/false
+
+- name: Change folder /share ownership, group and permissions
+  file:
+    path: "/share"
+    owner: "{{ samba_username }}"
+    group: smbgroup
+    mode: '0775'
+    state: directory
+    recurse: true
+
+- name: Add config to /etc/samba/smb.conf
+  lineinfile:
+    path: /etc/samba/smb.conf
+    line: [shared_folder]
+
+- name: Add config to /etc/samba/smb.conf
+  lineinfile:
+    path: /etc/samba/smb.conf
+    line: path = /share
+
+- name: Add config to /etc/samba/smb.conf
+  lineinfile:
+    path: /etc/samba/smb.conf
+    line: readonly = no
+    
+- name: Add config to /etc/samba/smb.conf
+  lineinfile:
+    path: /etc/samba/smb.conf
+    line: guest ok = no
+
+- name: Add config to /etc/samba/smb.conf
+  lineinfile:
+    path: /etc/samba/smb.conf
+    line: valid users = "{{ samba_username }}"
+
+- name: Enable samba
+  service:
+    name: smbd
+    enabled: yes
+
+- name: Start samba
+  service:
+    name: smbd
+    state: started

@@ -14,3 +14,4 @@ free_packages:
   - snapraid
   - ufw
   - lazydocker
+  - samba
