@@ -57,7 +57,8 @@ This Ansible script won't automatically start these containers; you'll have to d
 **1.3** In the project folder:\
 `ansible-playbook playbook.yml`
 
-Thats it! 
+### Configure backup
+Don't forget to set up a backup of your server. I highly recommend using [restic](https://restic.net/) along with [cron](https://en.wikipedia.org/wiki/Cron).
 
 ## Additional Information
 
