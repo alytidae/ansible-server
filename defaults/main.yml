@@ -30,11 +30,12 @@ ssh_password_authentication: "yes"
 ssh_port: "22"
 
 firewall_allow_ports:
-  - 22   # ssh
-  - 3000 # jellyfin
-  - 3001 # gitea web
-  - 3002 # gitea ssh
-  - 3003 # immich
-  - 3004 # grafana
+  - 22    # ssh
+  - 445   # samba
+  - 3000  # jellyfin
+  - 3001  # gitea web
+  - 3002  # gitea ssh
+  - 3003  # immich
+  - 3004  # grafana
   - 51820 # wireguard
   - 51821 # wireguard
