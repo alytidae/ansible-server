@@ -77,6 +77,16 @@
     port: "{{ item }}"
   with_items: "{{ firewall_allow_ports }}"
 
+- name: Enable ufw
+  service:
+    name: ufw
+    enabled: yes
+
+- name: Start ufw
+  service:
+    name: ufw
+    state: started
+
 - name: Create samba group
   group:
     name: smbgroup
