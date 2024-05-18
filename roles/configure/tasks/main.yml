@@ -103,29 +103,14 @@
     recurse: true
 
 - name: Add config to /etc/samba/smb.conf
-  lineinfile:
+  blockinfile:
     path: /etc/samba/smb.conf
-    line: [shared_folder]
-
-- name: Add config to /etc/samba/smb.conf
-  lineinfile:
-    path: /etc/samba/smb.conf
-    line: path = /share
-
-- name: Add config to /etc/samba/smb.conf
-  lineinfile:
-    path: /etc/samba/smb.conf
-    line: readonly = no
-    
-- name: Add config to /etc/samba/smb.conf
-  lineinfile:
-    path: /etc/samba/smb.conf
-    line: guest ok = no
-
-- name: Add config to /etc/samba/smb.conf
-  lineinfile:
-    path: /etc/samba/smb.conf
-    line: valid users = "{{ samba_username }}"
+    block: |
+      [share]
+          path = /share
+          readonly = no
+          guest ok = no
+          valid users = {{ samba_username }}
 
 - name: Enable samba
   service:
