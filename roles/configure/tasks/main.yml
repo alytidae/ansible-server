@@ -93,6 +93,14 @@
     system: true
     shell: /usr/bin/false
 
+- name: Configure Samba users.
+  shell: >
+    (pdbedit --user={{ samba_username }} 2>&1 > /dev/null)
+    || (echo '{{ samba_password }}'; echo '{{ samba_password }}')
+    | smbpasswd -s -a {{ samba_username }}
+  register: smbpasswd
+  changed_when: "'Added user' in smbpasswd.stdout"
+
 - name: Change folder /share ownership, group and permissions
   file:
     path: "/share"
