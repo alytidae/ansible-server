@@ -8,6 +8,7 @@ services:
       - ${JELLYFIN_PATH}/config:/config
       - ${JELLYFIN_PATH}/cache:/cache
       - ${JELLYFIN_PATH}/media:/media
+      - /share:/media
     ports:
       - ${JELLYFIN_PORT_WEB}:8096
     environment:
