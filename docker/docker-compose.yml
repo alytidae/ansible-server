@@ -120,7 +120,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     ports:
-      - ${PROMETHEUS_PORT_WEB}:9090
+      - 127.0.0.1:${PROMETHEUS_PORT_WEB}:9090
     volumes:
       - prom-data:/prometheus    
       - ${PROMETHEUS_PATH}:/etc/prometheus
@@ -135,7 +135,7 @@ services:
       - '--path.rootfs=/host'
     pid: host
     ports:
-      - ${NODE_EXPORTER_PORT}:9100
+      - 127.0.0.1:${NODE_EXPORTER_PORT}:9100
     volumes:
       - '/:/host:ro,rslave'      
     env_file:
