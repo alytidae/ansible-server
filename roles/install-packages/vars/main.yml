@@ -3,6 +3,7 @@ free_packages:
   - sudo
   - htop
   - curl
+  - openssh-server
   - git
   - tree
   - neofetch
