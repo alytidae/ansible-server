@@ -1,4 +1,4 @@
-version: '3'
+---
 
 services:
   jellyfin:
@@ -8,7 +8,7 @@ services:
       - ${JELLYFIN_PATH}/config:/config
       - ${JELLYFIN_PATH}/cache:/cache
       - ${JELLYFIN_PATH}/media:/media
-      - /share:/media
+      - /mnt/samba:/media
     ports:
       - ${JELLYFIN_PORT_WEB}:8096
     environment:
@@ -16,7 +16,7 @@ services:
       - USER_GID=1000
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
   gitea:
     image: gitea/gitea
@@ -33,7 +33,7 @@ services:
       - USER_GID=1000
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
   immich-server:
     container_name: immich_server
@@ -51,7 +51,7 @@ services:
       - database
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
   immich-microservices:
     container_name: immich_microservices
@@ -67,7 +67,7 @@ services:
       - database
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -76,12 +76,12 @@ services:
       - model-cache:/cache
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
   redis:
     container_name: immich-redis
-    image: registry.hub.docker.com/library/redis:latest
-    restart: no
+    image: registry.hub.docker.com/library/redis:stable
+    restart: unless-stopped
 
   database:
     container_name: immich_postgres
@@ -94,14 +94,14 @@ services:
       - pgdata:/var/lib/postgresql/data
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
-  # watchtower:
-  #   image: containrrr/watchtower
-  #   container_name: watchtower
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   restart: no
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
 
   grafana:
     image: grafana/grafana-oss
@@ -111,10 +111,9 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
       - grafana-config:/etc/grafana
-
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus
@@ -126,7 +125,7 @@ services:
       - ${PROMETHEUS_PATH}:/etc/prometheus
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
   node_exporter:
     image: prom/node-exporter
@@ -140,29 +139,21 @@ services:
       - '/:/host:ro,rslave'      
     env_file:
       - docker.env
-    restart: no
+    restart: unless-stopped
 
-  wireguard:
-    image: ghcr.io/wg-easy/wg-easy
-    container_name: wireguard
-    volumes:
-      - etc_wireguard:/etc/wireguard
-    ports:
-      - ${WIREGUARD_PORT_UDP}:51820/udp
-      - ${WIREGUARD_PORT_TCP}:51821/tcp
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    sysctls:
-      - net.ipv4.ip_forward=1
-      - net.ipv4.conf.all.src_valid_mark=1
-    environment:
-      - LANG=${WIREGUARD_LANG}
-      - WG_HOST=${WIREGUARD_HOST}
-      - PASSWORD=${WIREGUARD_PASSWORD}
-    env_file:
-      - docker.env
-    restart: no
+  tailscale: 
+    container_name: tailscale 
+    hostname: tailscale
+    image: tailscale/tailscale:stable 
+    volumes: 
+      - tailscale:/var/lib  
+      - /dev/net/tun:/dev/net/tun 
+    cap_add: 
+      - net_admin 
+      - sys_module 
+    command: tailscaled 
+    privileged: true 
+    restart: unless-stopped
 
 volumes:
   pgdata:
@@ -171,3 +162,4 @@ volumes:
   grafana-data:
   grafana-config:
   prom-data:    
+  tailscale:
