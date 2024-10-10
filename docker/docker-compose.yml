@@ -79,7 +79,7 @@ services:
 
   redis:
     container_name: immich-redis
-    image: registry.hub.docker.com/library/redis:stable
+    image: registry.hub.docker.com/library/redis:latest
     restart: unless-stopped
 
   database:
