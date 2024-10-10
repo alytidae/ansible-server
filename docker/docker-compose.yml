@@ -7,8 +7,7 @@ services:
     volumes:
       - ${JELLYFIN_PATH}/config:/config
       - ${JELLYFIN_PATH}/cache:/cache
-      - ${JELLYFIN_PATH}/media:/media
-      - /mnt/samba:/media
+      - /mnt/share/:/media:rw
     ports:
       - ${JELLYFIN_PORT_WEB}:8096
     environment:
