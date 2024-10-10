@@ -6,13 +6,13 @@ free_packages:
   - git
   - tree
   - neofetch
-  - helix 
+  - vim # but helix is really good
   - wget
-  - lazygit 
+  # - lazygit 
   - docker
   - docker-compose
   - mergerfs
   - snapraid
   - ufw
-  - lazydocker
+  # - lazydocker
   - samba
