@@ -1,5 +1,6 @@
 ---
 free_packages:
+  - sudo
   - htop
   - curl
   - git
