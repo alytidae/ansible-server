@@ -1,6 +1,5 @@
 ---
 free_packages:
-  - sudo
   - htop
   - curl
   - openssh-server

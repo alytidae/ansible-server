@@ -14,6 +14,11 @@
     append: yes
     create_home: true
 
+- name: Install sudo
+  package:
+    name: sudo
+    state: present
+
 - name: Allow 'wheel' group to have password sudo
   lineinfile:
     dest: /etc/sudoers
