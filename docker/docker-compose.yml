@@ -142,6 +142,7 @@ services:
 
   tailscale-nginx:
     image: tailscale/tailscale:stable
+    container_name: tailscale-nginx 
     hostname: ${TAILSCALE_HOSTNAME}
     environment:
       - TS_AUTHKEY=${TAILSCALE_AUTHKEY}
