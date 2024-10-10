@@ -1,5 +1,10 @@
 ---
 
+- name: Ensure group "wheel" exists
+  ansible.builtin.group:
+    name: wheel
+    state: present
+
 - name: Add new user "{{ username }}"
   user:
     name: "{{ username }}"
