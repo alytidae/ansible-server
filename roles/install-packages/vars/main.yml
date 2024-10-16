@@ -6,13 +6,16 @@ free_packages:
   - git
   - tree
   - neofetch
-  - vim # but helix is really good
+  - vim
   - wget
-  # - lazygit 
   - docker
   - docker-compose
   - mergerfs
   - snapraid
   - ufw
-  # - lazydocker
   - samba
+  - caddy
+
+# Good packages that doesnt exists in devuan/debian.
+# - lazygit 
+# - lazydocker
