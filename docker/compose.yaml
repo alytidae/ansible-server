@@ -133,7 +133,7 @@ services:
     ports:
       - 127.0.0.1:${NODE_EXPORTER_PORT}:9100
     volumes:
-      - '/:/host:ro,rslave'      
+      - '/:/host:ro'      
     env_file:
       - docker.env
     restart: unless-stopped
