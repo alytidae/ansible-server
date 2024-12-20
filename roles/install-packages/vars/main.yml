@@ -2,7 +2,7 @@
 free_packages:
   - htop
   - curl
-  - openssh-server
+  - openssh
   - git
   - tree
   - neofetch
@@ -15,7 +15,5 @@ free_packages:
   - ufw
   - samba
   - caddy
-
-# Good packages that doesnt exists in devuan/debian.
-# - lazygit 
-# - lazydocker
+  - lazygit 
+  - lazydocker
