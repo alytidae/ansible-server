@@ -3,9 +3,9 @@ services:
     image: jellyfin/jellyfin
     container_name: jellyfin
     volumes:
-      - ${JELLYFIN_PATH}/config:/config
-      - ${JELLYFIN_PATH}/cache:/cache
-      - /mnt/share/:/media:rw
+      - jellyfin:/config:/config
+      - jellyfin:/cache:/cache
+      - ${JELLYFIN_DATA_PATH}:/media:rw
     ports:
       - ${JELLYFIN_PORT_WEB}:8096
     environment:
@@ -19,7 +19,7 @@ services:
     image: gitea/gitea
     container_name: gitea
     volumes:
-      - ${GITEA_PATH}/gitea:/data
+      - ${GITEA_DATA_PATH}/gitea:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
@@ -169,3 +169,4 @@ volumes:
   grafana-config:
   prom-data:    
   tailscale-nginx:
+  jellyfin:
