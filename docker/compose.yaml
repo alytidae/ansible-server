@@ -20,8 +20,6 @@ services:
     container_name: gitea
     volumes:
       - ${GITEA_DATA_PATH}/gitea:/data
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
     ports:
       - ${GITEA_PORT_WEB}:3000
       - ${GITEA_PORT_SSH}:22
@@ -35,12 +33,9 @@ services:
   immich-server:
     container_name: immich_server
     image:  ghcr.io/immich-app/immich-server:release
-    command: ['start.sh', 'immich']
     volumes:
-      # Look, I turned off the upload function.
-      # - /path/to/upload/images:/usr/src/app/upload
       - ${IMMICH_EXTERNAL_IMAGES_PATH}:/usr/src/app/external:ro
-      - /etc/localtime:/etc/localtime:ro
+      - ${IMMICH_THUMBNAILS_PATH}:/usr/src/app/upload
     ports:
       - ${IMMICH_PORT_WEB}:3001
     depends_on:
@@ -48,49 +43,63 @@ services:
       - database
     env_file:
       - docker.env
-    restart: unless-stopped
-
-  immich-microservices:
-    container_name: immich_microservices
-    image: ghcr.io/immich-app/immich-server:release
-    command: ['start.sh', 'microservices']
-    volumes:
-      # Look, I turned off the upload function.
-      # - /path/to/upload/images:/usr/src/app/upload
-      - ${IMMICH_EXTERNAL_IMAGES_PATH}:/usr/src/app/external:ro
-      - /etc/localtime:/etc/localtime:ro
-    depends_on:
-      - redis
-      - database
-    env_file:
-      - docker.env
+    healthcheck:
+      disable: false
     restart: unless-stopped
 
   immich-machine-learning:
     container_name: immich_machine_learning
+    # For hardware acceleration, add one of -[armnn, cuda, openvino] to the image tag.
+    # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:release
+    # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
+    #   file: hwaccel.ml.yml
+    #   service: cpu # set to one of [armnn, cuda, openvino, openvino-wsl] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
       - model-cache:/cache
     env_file:
       - docker.env
+    healthcheck:
+      disable: false
     restart: unless-stopped
 
   redis:
-    container_name: immich-redis
+    container_name: immich_redis
     image: registry.hub.docker.com/library/redis:latest
+    healthcheck:
+      test: redis-cli ping || exit 1
     restart: unless-stopped
 
   database:
     container_name: immich_postgres
-    image: registry.hub.docker.com/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
+      POSTGRES_INITDB_ARGS: '--data-checksums'
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
       - docker.env
+    healthcheck:
+      test: >-
+        pg_isready --dbname="$${POSTGRES_DB}" --username="$${POSTGRES_USER}" || exit 1;
+        Chksum="$$(psql --dbname="$${POSTGRES_DB}" --username="$${POSTGRES_USER}" --tuples-only --no-align
+        --command='SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database')";
+        echo "checksum failure count is $$Chksum";
+        [ "$$Chksum" = '0' ] || exit 1
+      interval: 5m
+      start_interval: 30s
+      start_period: 5m
+    command: >-
+      postgres
+      -c shared_preload_libraries=vectors.so
+      -c 'search_path="$$user", public, vectors'
+      -c logging_collector=on
+      -c max_wal_size=2GB
+      -c shared_buffers=512MB
+      -c wal_compression=on
     restart: unless-stopped
 
   watchtower:
